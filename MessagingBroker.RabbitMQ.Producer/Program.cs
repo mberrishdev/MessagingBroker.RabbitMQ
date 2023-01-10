@@ -1,8 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using Newtonsoft.Json;
+using MessagingBroker.RabbitMQ.Producer;
 using RabbitMQ.Client;
-using System.Text;
 
 Console.WriteLine("Hello, World from Producer!");
 
@@ -14,19 +13,17 @@ var factory = new ConnectionFactory
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 
-channel.QueueDeclare("sample-rabbitMq", true, false, false, null);
 
-while (true)
-{
-    var input = Console.ReadLine();
-    if (input.Equals("exit", StringComparison.OrdinalIgnoreCase))
-    {
-        break;
-    }
-    var message = new { Name = "Producer", Message = input };
-    var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+//while (true)
+//{
+//    var input = Console.ReadLine();
+//    if (input.Equals("exit", StringComparison.OrdinalIgnoreCase))
+//    {
+//        break;
+//    }
 
-    channel.BasicPublish("", "sample-rabbitMq", null, body);
-}
+//QueueProducer.Publish(channel, "Hello from Producer");
+DirectExchangePublisher.Publish(channel, "Hello from Producer, Direct Exchange");
+//}
 
 
